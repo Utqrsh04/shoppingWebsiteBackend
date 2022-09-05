@@ -35,9 +35,11 @@ const productSchema = mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    size_options: {
-      type: String,
-    },
+    size_options: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: true,
