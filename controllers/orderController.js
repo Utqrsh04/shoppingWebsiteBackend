@@ -1,16 +1,45 @@
 const asyncHandler = require("express-async-handler");
 const Order = require("../models/orderModel");
 const uniqid = require("uniqid");
+const { validateProduct } = require("../utils/validateProduct");
 
 const createOrder = asyncHandler(async (req, res) => {
-  const { delivery_address, products, price, user_id } = req.body;
+  const { shipping_address, products, price } = req.body;
 
-  console.log("In Create Order ", delivery_address, products, price, user_id);
+  console.log("In Create Order ", shipping_address, products, price);
 
-  res.status(201).json({
-    message: "order sucessfull",
-    order_id: uniqid(),
-  });
+  for (const p in products) {
+    if (validateProduct(p) === false) {
+      res.status(400);
+      throw new Error("Sorry this order could not be completed. Try Again");
+    }
+  }
+
+  //price check will go here
+
+  console.log("all products are valid razorpay");
+  const payment_capture = 1;
+  const amount = price;
+  const currency = "INR";
+
+  const options = {
+    amount: amount,
+    currency,
+    receipt: uniqid(),
+    payment_capture,
+  };
+
+  try {
+    const response = await razorpay.orders.create(options);
+    console.log(response);
+    res.json({
+      id: response.id,
+      currency: response.currency,
+      amount: response.amount,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 const getOrdersOfUser = asyncHandler(async (req, res) => {
@@ -25,11 +54,11 @@ const getOrderById = asyncHandler(async (req, res) => {
   console.log(oid);
   const order = await Order.findOne({ order_id: oid });
 
-  // check if the requested order is created by this user only . (No other user fetch order of other users)
-  if (order.user.toString() !== req.user._id.toString()) {
-    res.status(401);
-    throw new Error("You cannot perform this action");
-  }
+  // // check if the requested order is created by this user only . (No other user fetch order of other users)
+  // if (order.user.toString() !== req.user._id.toString()) {
+  //   res.status(401);
+  //   throw new Error("You cannot perform this action");
+  // }
 
   if (order) {
     res.json(order);

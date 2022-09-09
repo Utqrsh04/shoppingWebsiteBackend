@@ -7,9 +7,10 @@ const orderSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
-    delivery_address: {
-      type: String,
+    shipping_address: {
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: "ShippingAddress",
     },
     payment_id: {
       type: String,

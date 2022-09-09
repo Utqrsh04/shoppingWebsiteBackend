@@ -16,10 +16,17 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    // orders: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Order",
-    // },
+    //array of orders
+    orders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Order",
+      },
+    ],
+    shipping_address: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ShippingAddress",
+    },
   },
   {
     timestamps: true,
@@ -39,6 +46,6 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const User = mongoose.model("User ", userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

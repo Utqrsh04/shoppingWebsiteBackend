@@ -103,27 +103,21 @@ const updateProduct = expressAsyncHandler(async (req, res) => {
   }
 });
 
-// func to delete note
-const deleteNote = expressAsyncHandler(async (req, res) => {
+// func to delete product
+const deleteProduct = expressAsyncHandler(async (req, res) => {
   // console.log("Delete Product Called");
-  const note_id = req.params.id;
+  const p_id = req.params.id;
 
-  const note = await Product.findById(note_id);
+  const product = await Product.findById(p_id);
 
-  // check if the requested note is created by this user only . (No other user can edit notes of other users)
-  if (note.user.toString() !== req.user._id.toString()) {
-    res.status(401);
-    throw new Error("You cannot perform this action");
-  }
-
-  // removing the note if it exists
-  if (note) {
-    await note.remove();
+  // removing the product if it exists
+  if (product) {
+    await product.remove();
     res.json({
       message: "Product Deleted",
     });
   }
-  // if note dosen't exist throw Error
+  // if product dosen't exist throw Error
   else {
     throw new Error("Product not found");
   }

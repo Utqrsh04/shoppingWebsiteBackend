@@ -5,6 +5,7 @@ const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const productRoutes = require("./routes/productRoutes");
+const shippingAddressRoutes = require("./routes/shippingRoutes");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 const path = require("path");
 const dotenv = require("dotenv");
@@ -12,11 +13,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 connectDB();
 
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -26,6 +23,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/product", productRoutes);
+app.use("/api/shippingAddress", shippingAddressRoutes);
 
 // --------------------deployment---------------------
 // __dirname = path.resolve();
