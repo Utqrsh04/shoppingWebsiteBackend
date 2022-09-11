@@ -1,14 +1,13 @@
-import Product from "../models/productModel";
+const validateProduct = (a, b) => {
+  if (
+    a.localeCompare(b, undefined, {
+      sensitivity: "base",
+    }) === 0
+  ) {
+    console.log("VALID ", a, b);
+    return true;
+  }
+  return false;
+};
 
-const expressAsyncHandler = require("express-async-handler");
-
-export const validateProduct = expressAsyncHandler(async (p) => {
-  console.log("validating product");
-
-  const product = await Product.findOne({ product_id: pid });
-
-  if (!product) return false;
-
-  if (p.price === product.price) return true;
-  else return false;
-});
+module.exports = { validateProduct };

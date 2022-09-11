@@ -2,24 +2,41 @@ const asyncHandler = require("express-async-handler");
 const Order = require("../models/orderModel");
 const uniqid = require("uniqid");
 const { validateProduct } = require("../utils/validateProduct");
+const Razorpay = require("razorpay");
+const Product = require("../models/productModel");
+
+const razorpay = new Razorpay({
+  key_id: "rzp_test_qGx6ZOHwjb87fm",
+  key_secret: "TGtc2CERGLrGO9wNilbufFaO",
+});
 
 const createOrder = asyncHandler(async (req, res) => {
   const { shipping_address, products, price } = req.body;
 
-  console.log("In Create Order ", shipping_address, products, price);
+  console.log("In Create Order ", req.body);
 
-  for (const p in products) {
-    if (validateProduct(p) === false) {
-      res.status(400);
-      throw new Error("Sorry this order could not be completed. Try Again");
+  const Allproducts = await Product.find();
+
+  let totalPrice = 0;
+
+  for (let i = 0; i < products.length; i++) {
+    for (let j = 0; j < Allproducts.length; j++) {
+      if (
+        products[i].localeCompare(Allproducts[j].product_id, undefined, {
+          sensitivity: "base",
+        }) === 0
+      ) {
+        console.log("matched ", products[i], Allproducts[j].product_id);
+        totalPrice += Allproducts[j].price;
+      }
     }
   }
 
-  //price check will go here
+  console.log("total ", totalPrice);
 
   console.log("all products are valid razorpay");
   const payment_capture = 1;
-  const amount = price;
+  const amount = price * 100;
   const currency = "INR";
 
   const options = {
@@ -39,6 +56,7 @@ const createOrder = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    throw new Error(error.error.description);
   }
 });
 
