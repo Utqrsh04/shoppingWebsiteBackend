@@ -12,7 +12,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 connectDB();
 
-// app.use(cors({ origin: "*" }));
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

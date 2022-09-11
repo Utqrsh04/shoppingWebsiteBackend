@@ -18,8 +18,7 @@ const fetchShippingAddress = expressAsyncHandler(async (req, res) => {
 });
 
 const saveShippingAddress = expressAsyncHandler(async (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
-
+  
   console.log("Save Shipping Address Called");
 
   // Need to complete this func ASAP
