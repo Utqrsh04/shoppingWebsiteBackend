@@ -7,13 +7,12 @@ const orderRoutes = require("./routes/orderRoutes");
 const productRoutes = require("./routes/productRoutes");
 const shippingAddressRoutes = require("./routes/shippingRoutes");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
-const path = require("path");
 const dotenv = require("dotenv");
 
 dotenv.config();
 connectDB();
 
-app.use(cors({ origin: "*" }));
+// app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

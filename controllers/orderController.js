@@ -1,7 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Order = require("../models/orderModel");
 const uniqid = require("uniqid");
-const { validateProduct } = require("../utils/validateProduct");
 const Razorpay = require("razorpay");
 const Product = require("../models/productModel");
 
