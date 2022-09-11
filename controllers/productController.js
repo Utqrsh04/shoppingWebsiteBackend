@@ -5,6 +5,7 @@ const generateProductId = require("../utils/generateProductId");
 // func to fetch all products
 const getProducts = expressAsyncHandler(async (req, res) => {
   console.log("Get Products Called");
+  res.set('Access-Control-Allow-Origin', '*');
   const products = await Product.find();
   res.json(products);
 });
