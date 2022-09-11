@@ -3,6 +3,8 @@ const User = require("../models/userModel");
 const generateToken = require("../utils/generateToken");
 
 const registerUser = asyncHandler(async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*");
+
   const { name, email, password } = req.body;
 
   const userExists = await User.findOne({ email });
@@ -32,6 +34,8 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const authUser = asyncHandler(async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*");
+
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
@@ -55,6 +59,8 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*");
+
   const user = await User.findById(req.user._id);
 
   if (user) {

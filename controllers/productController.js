@@ -5,13 +5,15 @@ const generateProductId = require("../utils/generateProductId");
 // func to fetch all products
 const getProducts = expressAsyncHandler(async (req, res) => {
   console.log("Get Products Called");
-  res.set('Access-Control-Allow-Origin', '*');
+  res.set("Access-Control-Allow-Origin", "*");
   const products = await Product.find();
   res.json(products);
 });
 
 const getNewArrivalsProducts = expressAsyncHandler(async (req, res) => {
   console.log("Get New Arrivals Products Called");
+  res.set("Access-Control-Allow-Origin", "*");
+
   const products = await Product.find({ new_arrivals: true });
   res.json(products);
 });
@@ -19,6 +21,8 @@ const getNewArrivalsProducts = expressAsyncHandler(async (req, res) => {
 // func to create product
 const createProduct = expressAsyncHandler(async (req, res) => {
   console.log("Create Product Called");
+  res.set("Access-Control-Allow-Origin", "*");
+
   const {
     product_name,
     desc,
@@ -57,6 +61,8 @@ const createProduct = expressAsyncHandler(async (req, res) => {
 // func to get single product by id
 const getProductById = expressAsyncHandler(async (req, res) => {
   console.log("Get Products by Id called");
+  res.set("Access-Control-Allow-Origin", "*");
+
   const pid = req.params.id;
 
   const product = await Product.findOne({ product_id: pid });
@@ -71,6 +77,8 @@ const getProductById = expressAsyncHandler(async (req, res) => {
 // func to update a product
 const updateProduct = expressAsyncHandler(async (req, res) => {
   console.log("Update Product Called");
+  res.set("Access-Control-Allow-Origin", "*");
+
   const id = req.params.id;
   const {
     product_name,
@@ -107,6 +115,8 @@ const updateProduct = expressAsyncHandler(async (req, res) => {
 // func to delete product
 const deleteProduct = expressAsyncHandler(async (req, res) => {
   // console.log("Delete Product Called");
+  res.set("Access-Control-Allow-Origin", "*");
+
   const p_id = req.params.id;
 
   const product = await Product.findById(p_id);
