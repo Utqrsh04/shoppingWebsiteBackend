@@ -4,7 +4,6 @@ const generateToken = require("../utils/generateToken");
 
 const registerUser = asyncHandler(async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
-
   const { name, email, password } = req.body;
 
   const userExists = await User.findOne({ email });

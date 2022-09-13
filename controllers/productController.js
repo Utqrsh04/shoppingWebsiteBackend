@@ -13,7 +13,6 @@ const getProducts = expressAsyncHandler(async (req, res) => {
 const getNewArrivalsProducts = expressAsyncHandler(async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
   console.log("Get New Arrivals Products Called");
-
   const products = await Product.find({ new_arrivals: true });
   res.json(products);
 });
