@@ -7,7 +7,7 @@ const { protect } = require("../middlewares/authMiddleware");
 const { corsMiddleware } = require("../middlewares/corsMiddleware");
 const router = express.Router();
 
-router.route("/").get(corsMiddleware, protect, fetchShippingAddress);
-router.route("/update").post(corsMiddleware, protect, saveShippingAddress);
+router.route("/").get(protect, fetchShippingAddress);
+router.route("/update").post(protect, saveShippingAddress);
 
 module.exports = router;
