@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
+const { generateAuthid } = require("../utils/generateAuth_id");
 const generateToken = require("../utils/generateToken");
+const { sendEmailToUser } = require("../utils/sendEmail");
 
 const registerUser = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -20,13 +22,19 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("User Already Exists");
   }
 
+  const auth_id = generateAuthid(20);
+
+  sendEmailToUser(name, email, auth_id);
+
   const user = await User.create({
     name,
     email,
     password,
+    auth_id,
   });
 
   if (user) {
+    //send email with id as query param
     res.status(201).json({
       _id: user._id,
       name: user.name,
@@ -50,12 +58,17 @@ const authUser = asyncHandler(async (req, res) => {
   );
 
   const { email, password } = req.body;
-
+  // console.log(email, password);
   const user = await User.findOne({ email });
 
   if (!user) {
     res.status(400);
     throw new Error("User does not exist!");
+  }
+
+  if (user && user.isAuthenticated === false) {
+    res.status(400);
+    throw new Error("Please verify your email first");
   }
 
   if (user && (await user.matchPassword(password))) {
@@ -72,7 +85,14 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "PUT, POST, GET, DELETE, PATCH, OPTIONS"
+  );
 
   const user = await User.findById(req.user._id);
 

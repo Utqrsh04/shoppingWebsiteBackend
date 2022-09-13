@@ -27,6 +27,16 @@ const userSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "ShippingAddress",
     },
+
+    auth_id: {
+      type: String,
+      required: true,
+    },
+    isAuthenticated: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   {
     timestamps: true,
