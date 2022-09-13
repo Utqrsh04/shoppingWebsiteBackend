@@ -3,7 +3,14 @@ const User = require("../models/userModel");
 const generateToken = require("../utils/generateToken");
 
 const registerUser = asyncHandler(async (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "PUT, POST, GET, DELETE, PATCH, OPTIONS"
+  );
   const { name, email, password } = req.body;
 
   const userExists = await User.findOne({ email });
@@ -33,7 +40,14 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const authUser = asyncHandler(async (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "PUT, POST, GET, DELETE, PATCH, OPTIONS"
+  );
 
   const { email, password } = req.body;
 

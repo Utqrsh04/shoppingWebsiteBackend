@@ -4,14 +4,28 @@ const generateProductId = require("../utils/generateProductId");
 
 // func to fetch all products
 const getProducts = expressAsyncHandler(async (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "PUT, POST, GET, DELETE, PATCH, OPTIONS"
+  );
   console.log("Get Products Called");
   const products = await Product.find();
   res.json(products);
 });
 
 const getNewArrivalsProducts = expressAsyncHandler(async (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "PUT, POST, GET, DELETE, PATCH, OPTIONS"
+  );
   console.log("Get New Arrivals Products Called");
   const products = await Product.find({ new_arrivals: true });
   res.json(products);
@@ -19,7 +33,14 @@ const getNewArrivalsProducts = expressAsyncHandler(async (req, res) => {
 
 // func to create product
 const createProduct = expressAsyncHandler(async (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "PUT, POST, GET, DELETE, PATCH, OPTIONS"
+  );
   console.log("Create Product Called");
 
   const {
@@ -59,7 +80,14 @@ const createProduct = expressAsyncHandler(async (req, res) => {
 
 // func to get single product by id
 const getProductById = expressAsyncHandler(async (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "PUT, POST, GET, DELETE, PATCH, OPTIONS"
+  );
   console.log("Get Products by Id called");
 
   const pid = req.params.id;
@@ -75,7 +103,14 @@ const getProductById = expressAsyncHandler(async (req, res) => {
 
 // func to update a product
 const updateProduct = expressAsyncHandler(async (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "PUT, POST, GET, DELETE, PATCH, OPTIONS"
+  );
   console.log("Update Product Called");
 
   const id = req.params.id;

@@ -7,6 +7,8 @@ const productRoutes = require("./routes/productRoutes");
 const shippingAddressRoutes = require("./routes/shippingRoutes");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 const dotenv = require("dotenv");
+var cors = require("cors");
+app.use(cors());
 
 dotenv.config();
 connectDB();
