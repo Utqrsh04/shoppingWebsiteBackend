@@ -25,10 +25,10 @@ app.get("/", (req, res) => {
   res.send("API is runnnig");
 });
 
-app.use("/api/users", cors(), userRoutes);
-app.use("/api/order", cors(), orderRoutes);
-app.use("/api/product", cors(), productRoutes);
-app.use("/api/shippingAddress", cors(), shippingAddressRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/order", orderRoutes);
+app.use("/api/product", productRoutes);
+app.use("/api/shippingAddress", shippingAddressRoutes);
 
 // --------------------deployment---------------------
 // __dirname = path.resolve();
