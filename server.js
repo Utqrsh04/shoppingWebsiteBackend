@@ -14,20 +14,21 @@ connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
-app.use(function (req, res, next) {
-  res.header(" Access-Control-Allow-Origin ", " * ");
-  next();
-});
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   next();
+// });
 
 app.get("/", (req, res) => {
   res.send("API is runnnig");
 });
 
-app.use("/api/users", userRoutes);
-app.use("/api/order", orderRoutes);
-app.use("/api/product", productRoutes);
-app.use("/api/shippingAddress", shippingAddressRoutes);
+app.use("/api/users", cors(), userRoutes);
+app.use("/api/order", cors(), orderRoutes);
+app.use("/api/product", cors(), productRoutes);
+app.use("/api/shippingAddress", cors(), shippingAddressRoutes);
 
 // --------------------deployment---------------------
 // __dirname = path.resolve();
