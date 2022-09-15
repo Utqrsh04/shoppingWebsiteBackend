@@ -6,6 +6,7 @@ const {
   getNewArrivalsProducts,
 } = require("../controllers/productController");
 const { protect } = require("../middlewares/authMiddleware");
+const { corsMiddleware } = require("../middlewares/corsMiddleware");
 const router = express.Router();
 
 router.route("/").get(getProducts);

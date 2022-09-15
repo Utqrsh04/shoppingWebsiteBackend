@@ -1,7 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Order = require("../models/orderModel");
 const uniqid = require("uniqid");
-const { validateProduct } = require("../utils/validateProduct");
 const Razorpay = require("razorpay");
 const Product = require("../models/productModel");
 
@@ -11,6 +10,8 @@ const razorpay = new Razorpay({
 });
 
 const createOrder = asyncHandler(async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*");
+
   const { shipping_address, products, price } = req.body;
 
   console.log("In Create Order ", req.body);
@@ -61,12 +62,16 @@ const createOrder = asyncHandler(async (req, res) => {
 });
 
 const getOrdersOfUser = asyncHandler(async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*");
+
   console.log("Get Orders of User Called");
   const orders = await Order.find({ user: req.user._id });
   res.json(orders);
 });
 
 const getOrderById = asyncHandler(async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*");
+
   console.log("Get Order By ID Called");
   const oid = req.params.id;
   console.log(oid);

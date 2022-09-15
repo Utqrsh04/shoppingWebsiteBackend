@@ -1,5 +1,4 @@
 const express = require("express");
-const cors = require("cors");
 const app = express();
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
@@ -7,19 +6,47 @@ const orderRoutes = require("./routes/orderRoutes");
 const productRoutes = require("./routes/productRoutes");
 const shippingAddressRoutes = require("./routes/shippingRoutes");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
-const path = require("path");
 const dotenv = require("dotenv");
+var cors = require("cors");
+const expressAsyncHandler = require("express-async-handler");
+const User = require("./models/userModel");
+app.use(cors());
 
 dotenv.config();
 connectDB();
 
-app.use(cors({ origin: "*" }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.send("API is runnnig");
 });
+app.get(
+  "/api/verify/:id",
+  expressAsyncHandler(async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Max-Age", "1800");
+    res.setHeader("Access-Control-Allow-Headers", "content-type");
+    res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
+    const id = req.params.id;
+    // console.log("catched ", id);
+    // utkarshxdd@gmail.com&oMrvdIdJBdj9vyR3mbgfgl80g0pgg
+    const info = req.params.id.split("&");
+    const email = info[0];
+    const auth_id = info[1];
+    const userExists = await User.findOne({ email });
+
+    if (userExists) {
+      if (userExists.auth_id === auth_id) {
+        userExists.isAuthenticated = true;
+        await userExists.save();
+        res.send("You are sucessfully verified");
+      } else {
+        res.send("Verification Failed");
+      }
+    }
+  })
+);
 
 app.use("/api/users", userRoutes);
 app.use("/api/order", orderRoutes);

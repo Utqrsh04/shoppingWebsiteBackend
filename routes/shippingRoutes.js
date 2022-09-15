@@ -4,6 +4,7 @@ const {
   saveShippingAddress,
 } = require("../controllers/shippingController");
 const { protect } = require("../middlewares/authMiddleware");
+const { corsMiddleware } = require("../middlewares/corsMiddleware");
 const router = express.Router();
 
 router.route("/").get(protect, fetchShippingAddress);

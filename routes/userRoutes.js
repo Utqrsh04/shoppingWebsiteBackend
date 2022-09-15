@@ -5,6 +5,7 @@ const {
   updateUser,
 } = require("../controllers/userController");
 const { protect } = require("../middlewares/authMiddleware");
+const { corsMiddleware } = require("../middlewares/corsMiddleware");
 const router = express.Router();
 
 router.route("/signup").post(registerUser);
