@@ -1,18 +1,20 @@
 const express = require("express");
 const app = express();
 const connectDB = require("./config/db");
+const dotenv = require("dotenv");
+dotenv.config();
+
 const userRoutes = require("./routes/userRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const productRoutes = require("./routes/productRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 const shippingAddressRoutes = require("./routes/shippingRoutes");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
-const dotenv = require("dotenv");
 var cors = require("cors");
 const expressAsyncHandler = require("express-async-handler");
 const User = require("./models/userModel");
 app.use(cors());
 
-dotenv.config();
 connectDB();
 
 app.use(express.json());
@@ -51,6 +53,7 @@ app.get(
 app.use("/api/users", userRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/product", productRoutes);
+app.use("/api/payment", paymentRoutes);
 app.use("/api/shippingAddress", shippingAddressRoutes);
 
 // --------------------deployment---------------------

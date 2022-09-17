@@ -4,10 +4,9 @@ const {
   getOrdersOfUser,
 } = require("../controllers/orderController");
 const { protect } = require("../middlewares/authMiddleware");
-const { corsMiddleware } = require("../middlewares/corsMiddleware");
 const router = express.Router();
 
-router.route("/create").post(createOrder);
-router.route("/").get(protect, getOrdersOfUser);
+router.route("/create").post(protect, createOrder);
+router.route("/").get(getOrdersOfUser);
 
 module.exports = router;

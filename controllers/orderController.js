@@ -5,16 +5,15 @@ const Razorpay = require("razorpay");
 const Product = require("../models/productModel");
 
 const razorpay = new Razorpay({
-  key_id: "rzp_test_qGx6ZOHwjb87fm",
-  key_secret: "TGtc2CERGLrGO9wNilbufFaO",
+  key_id: process.env.RAZOR_KEY,
+  key_secret: process.env.SECRET,
 });
 
 const createOrder = asyncHandler(async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
+  const { products, price, email, shippingData } = req.body;
 
-  const { shipping_address, products, price } = req.body;
-
-  console.log("In Create Order ", req.body);
+  // console.log("In Create Order ", req.body);
 
   const Allproducts = await Product.find();
 
@@ -22,13 +21,21 @@ const createOrder = asyncHandler(async (req, res) => {
 
   for (let i = 0; i < products.length; i++) {
     for (let j = 0; j < Allproducts.length; j++) {
+      console.log(
+        "matching ",
+        products[i].product_id,
+        Allproducts[j].product_id
+      );
+
       if (
-        products[i].localeCompare(Allproducts[j].product_id, undefined, {
-          sensitivity: "base",
-        }) === 0
+        products[i].product_id.localeCompare(Allproducts[j].product_id) == 0
       ) {
-        console.log("matched ", products[i], Allproducts[j].product_id);
-        totalPrice += Allproducts[j].price;
+        console.log(
+          "matched ✔ ",
+          products[i].product_id,
+          Allproducts[j].product_id
+        );
+        totalPrice += Allproducts[j].price * products[i].qty;
       }
     }
   }
@@ -37,7 +44,7 @@ const createOrder = asyncHandler(async (req, res) => {
 
   console.log("all products are valid razorpay");
   const payment_capture = 1;
-  const amount = price * 100;
+  const amount = totalPrice * 100;
   const currency = "INR";
 
   const options = {
@@ -49,12 +56,34 @@ const createOrder = asyncHandler(async (req, res) => {
 
   try {
     const response = await razorpay.orders.create(options);
-    console.log(response);
-    res.json({
-      id: response.id,
-      currency: response.currency,
-      amount: response.amount,
-    });
+    console.log("razorpay order ", response);
+
+    //save shipping address and get its _id
+
+    //create new order with following details
+
+    const newOrder = {
+      order_id: "",
+      shipping_address: "ref of shipping address",
+      payment_id: "",
+      products: products,
+      price: totalPrice,
+      user: req.user,
+    };
+
+    const createdOrder = await Order.create(newOrder);
+
+    if (createOrder) {
+      res.json({
+        id: response.id,
+        currency: response.currency,
+        amount: response.amount,
+        order: createOrder,
+      });
+    } else {
+      res.status(400);
+      throw new Error("Error Occured");
+    }
   } catch (error) {
     console.log(error);
     throw new Error(error.error.description);
