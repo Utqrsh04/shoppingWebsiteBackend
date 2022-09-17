@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const { generateAuthid } = require("../utils/generateAuth_id");
 const generateToken = require("../utils/generateToken");
-const { sendEmailToUser } = require("../utils/sendEmail");
+const { sendEmailToUser } = require("../utils/sendRegistrationEmail");
 
 const registerUser = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

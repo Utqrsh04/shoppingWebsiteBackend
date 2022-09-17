@@ -25,7 +25,7 @@ const shippingAddressSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    Phone_Number: {
+    phone_number: {
       type: Boolean,
       default: false,
     },

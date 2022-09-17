@@ -34,6 +34,10 @@ const orderSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
+    paymentStatus: {
+      type: String,
+      default: "pending",
+    },
     isDelivered: {
       type: Boolean,
       default: false,
