@@ -12,15 +12,15 @@ const paymentCaptured = expressAsyncHandler(async (req, res) => {
   console.log("payment captured route");
 
   // do a validation
-  const secret = "utqrsh@1234";
+  const secret = process.env.RAZOR_VALIDATION_SECRET;
 
-  console.log(req.body);
+  // console.log("IN PAYMENT AUTH ", req.body);
 
   const shasum = crypto.createHmac("sha256", secret);
   shasum.update(JSON.stringify(req.body));
   const digest = shasum.digest("hex");
 
-  console.log(digest, req.headers["x-razorpay-signature"]);
+  // console.log(digest, req.headers["x-razorpay-signature"]);
 
   if (digest === req.headers["x-razorpay-signature"]) {
     console.log("request is legit");
@@ -28,24 +28,31 @@ const paymentCaptured = expressAsyncHandler(async (req, res) => {
     // get order_id;
     // find order_id and update payment status to completed.
 
-    const order_id = "";
-
+    const order_id = req.body.payload.payment.entity.order_id;
+    // console.log("order id", order_id);
     const order = await Order.findOne({ order_id });
-
+    // console.log("ORDER ", order);
     if (order) {
       order.paymentStatus = "completed";
+      order.payment_id = req.body.payload.payment.entity.id;
 
-      await Order.Save();
+      const updated_order = await order.save();
+      console.log("updated order", updated_order);
 
-      require("fs").writeFileSync(
-        "payment1.json",
-        JSON.stringify(req.body, null, 4)
-      );
+      // require("fs").writeFileSync(
+      //   "payment1.json",
+      //   JSON.stringify(req.body, null, 4)
+      // );
+
+      ///make send email call here
+
+      res.json({ status: "ok" });
     } else {
-      // pass it
-      console.log("request is not legit");
+      res.status(400);
     }
-    res.json({ status: "ok" });
+  } else {
+    console.log("request is not legit");
+    res.status(502);
   }
 });
 
