@@ -21,12 +21,30 @@ const orderSchema = mongoose.Schema(
     // array of products
     products: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "Product",
+        qty: {
+          type: Number,
+          default: 0,
+        },
+        products: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "Product",
+        },
       },
     ],
-    price: {
+    subTotal: {
+      type: String,
+      required: true,
+    },
+    tax: {
+      type: String,
+      required: true,
+    },
+    delivery: {
+      type: String,
+      required: true,
+    },
+    totalPrice: {
       type: String,
       required: true,
     },
@@ -42,6 +60,11 @@ const orderSchema = mongoose.Schema(
     isDelivered: {
       type: Boolean,
       default: false,
+    },
+    totalItems: {
+      type: Number,
+      required: true,
+      default: 1,
     },
     remarks: {
       type: String,

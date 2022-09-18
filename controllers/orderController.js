@@ -4,6 +4,7 @@ const uniqid = require("uniqid");
 const Razorpay = require("razorpay");
 const Product = require("../models/productModel");
 const ShippingAddress = require("../models/shippingAddressModel");
+const { getOrderProducts } = require("../utils/createOrderProductsObject");
 
 const razorpay = new Razorpay({
   // key_id: process.env.RAZOR_KEY,
@@ -17,33 +18,32 @@ const createOrder = asyncHandler(async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
   const { products, price, email, shippingData } = req.body;
 
-  // console.log("In Create Order ", req.body);
-
+  console.log("In Create Order ");
   const Allproducts = await Product.find();
 
-  let totalPrice = 0;
-
-  //totalPrice calculation and check
+  let subtotal = 0;
+  let totalItems = 0;
+  //subtotal calculation and check
   for (let i = 0; i < products.length; i++) {
     for (let j = 0; j < Allproducts.length; j++) {
-      console.log(
-        "matching ",
-        products[i].product_id,
-        Allproducts[j].product_id
-      );
-
       if (
         products[i].product_id.localeCompare(Allproducts[j].product_id) == 0
       ) {
-        console.log(
-          "matched ✔ ",
-          products[i].product_id,
-          Allproducts[j].product_id
-        );
-        totalPrice += Allproducts[j].price * products[i].qty;
+        // console.log(
+        //   "matched ✔ ",
+        //   products[i].product_id,
+        //   Allproducts[j].product_id
+        // );
+        subtotal += Allproducts[j].price * products[i].qty;
+        totalItems += products[i].qty;
       }
     }
   }
+  let tax = 20;
+  let delivery = 49;
+  if (subtotal > 799) delivery = 0;
+
+  const totalPrice = subtotal + tax + delivery;
 
   console.log("total ", totalPrice);
 
@@ -93,8 +93,12 @@ const createOrder = asyncHandler(async (req, res) => {
       order_id: response.id,
       email: email,
       shipping_address: updatedAddress._id,
-      products: products,
-      price: totalPrice,
+      products: getOrderProducts(products),
+      subTotal: subtotal,
+      tax: tax,
+      delivery: delivery,
+      totalItems: totalItems,
+      totalPrice: totalPrice,
       user: req.user,
     };
 
@@ -135,7 +139,9 @@ const getOrderById = asyncHandler(async (req, res) => {
   console.log("Get Order By ID Called");
   const oid = req.params.id;
   console.log(oid);
-  const order = await Order.findOne({ order_id: oid }).populate("products");
+  const order = await Order.findOne({ order_id: oid })
+    .populate("shipping_address", "-_id")
+    .populate("products.products", "-_id");
 
   // // check if the requested order is created by this user only . (No other user fetch order of other users)
   // if (order.user.toString() !== req.user._id.toString()) {
