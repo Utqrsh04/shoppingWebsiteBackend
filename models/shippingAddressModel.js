@@ -5,6 +5,7 @@ const shippingAddressSchema = mongoose.Schema(
     user: {
       type: String,
       required: true,
+      unique: true,
     },
     street: {
       type: String,
@@ -26,8 +27,8 @@ const shippingAddressSchema = mongoose.Schema(
       required: true,
     },
     phone_number: {
-      type: Boolean,
-      default: false,
+      type: String,
+      required: true,
     },
   },
   {
