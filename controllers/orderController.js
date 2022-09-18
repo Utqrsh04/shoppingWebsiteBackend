@@ -3,10 +3,14 @@ const Order = require("../models/orderModel");
 const uniqid = require("uniqid");
 const Razorpay = require("razorpay");
 const Product = require("../models/productModel");
+const ShippingAddress = require("../models/shippingAddressModel");
 
 const razorpay = new Razorpay({
-  key_id: process.env.RAZOR_KEY,
-  key_secret: process.env.SECRET,
+  // key_id: process.env.RAZOR_KEY,
+  // key_secret: process.env.SECRET,
+
+  key_id: "rzp_test_qGx6ZOHwjb87fm",
+  key_secret: "TGtc2CERGLrGO9wNilbufFaO",
 });
 
 const createOrder = asyncHandler(async (req, res) => {
@@ -19,6 +23,7 @@ const createOrder = asyncHandler(async (req, res) => {
 
   let totalPrice = 0;
 
+  //totalPrice calculation and check
   for (let i = 0; i < products.length; i++) {
     for (let j = 0; j < Allproducts.length; j++) {
       console.log(
@@ -44,7 +49,7 @@ const createOrder = asyncHandler(async (req, res) => {
 
   console.log("all products are valid razorpay");
   const payment_capture = 1;
-  const amount = totalPrice * 100;
+  const amount = 2 * 100;
   const currency = "INR";
 
   const options = {
@@ -59,26 +64,52 @@ const createOrder = asyncHandler(async (req, res) => {
     console.log("razorpay order ", response);
 
     //save shipping address and get its _id
+    console.log("Frontend ", shippingData);
+    const user = shippingData.user;
 
+    let savedShippingAddress = await ShippingAddress.findOne({ user });
+    console.log("DB ", savedShippingAddress);
+
+    let updatedAddress;
+
+    if (savedShippingAddress) {
+      savedShippingAddress.user = shippingData.user;
+      savedShippingAddress.street = shippingData.street;
+      savedShippingAddress.apartment = shippingData.apartment;
+      savedShippingAddress.city = shippingData.city;
+      savedShippingAddress.state = shippingData.state;
+      savedShippingAddress.postal_code = shippingData.postal_code;
+      savedShippingAddress.phone_number = shippingData.phone_number;
+
+      updatedAddress = await savedShippingAddress.save();
+    } else {
+      updatedAddress = await ShippingAddress.create(shippingData);
+    }
+
+    console.log("Updated ", updatedAddress);
     //create new order with following details
 
     const newOrder = {
-      order_id: "",
-      shipping_address: "ref of shipping address",
-      payment_id: "",
+      order_id: response.id,
+      email: email,
+      shipping_address: updatedAddress._id,
       products: products,
       price: totalPrice,
       user: req.user,
     };
 
     const createdOrder = await Order.create(newOrder);
+    console.log("created order ", createdOrder);
 
-    if (createOrder) {
+    createdOrder.user.auth_id = undefined;
+    createdOrder.user.isAuthenticated = undefined;
+
+    if (createdOrder) {
       res.json({
         id: response.id,
         currency: response.currency,
         amount: response.amount,
-        order: createOrder,
+        order: createdOrder,
       });
     } else {
       res.status(400);
@@ -86,7 +117,7 @@ const createOrder = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    throw new Error(error.error.description);
+    throw new Error(error.error);
   }
 });
 
@@ -94,7 +125,7 @@ const getOrdersOfUser = asyncHandler(async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
 
   console.log("Get Orders of User Called");
-  const orders = await Order.find({ user: req.user._id });
+  const orders = await Order.find({ user: req.user._id }).populate("products");
   res.json(orders);
 });
 
@@ -104,7 +135,7 @@ const getOrderById = asyncHandler(async (req, res) => {
   console.log("Get Order By ID Called");
   const oid = req.params.id;
   console.log(oid);
-  const order = await Order.findOne({ order_id: oid });
+  const order = await Order.findOne({ order_id: oid }).populate("products");
 
   // // check if the requested order is created by this user only . (No other user fetch order of other users)
   // if (order.user.toString() !== req.user._id.toString()) {
@@ -120,4 +151,4 @@ const getOrderById = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createOrder, getOrdersOfUser };
+module.exports = { createOrder, getOrdersOfUser, getOrderById };

@@ -7,6 +7,9 @@ const orderSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    email: {
+      type: String,
+    },
     shipping_address: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
@@ -14,8 +17,6 @@ const orderSchema = mongoose.Schema(
     },
     payment_id: {
       type: String,
-      required: true,
-      unique: true,
     },
     // array of products
     products: [
