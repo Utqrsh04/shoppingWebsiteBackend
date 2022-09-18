@@ -35,7 +35,7 @@ const saveShippingAddress = expressAsyncHandler(async (req, res) => {
   // Need to complete this func ASAP
   const { user, street, apartment, city, state, postal_code, phone_number } =
     req.body;
-  console.log(req.body);
+  // console.log(req.body);
 
   const savedShippingAddress = await ShippingAddress.findOne({ user });
 

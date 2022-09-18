@@ -53,11 +53,11 @@ const createOrder = asyncHandler(async (req, res) => {
 
   const totalPrice = subtotal + tax + delivery;
 
-  console.log("total ", totalPrice);
+  // console.log("total ", totalPrice);
 
-  console.log("all products are valid razorpay");
+  // console.log("all products are valid razorpay");
   const payment_capture = 1;
-  const amount = 2 * 100;
+  const amount = totalPrice * 100;
   const currency = "INR";
 
   const options = {

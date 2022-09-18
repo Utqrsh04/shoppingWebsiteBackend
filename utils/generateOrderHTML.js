@@ -1,6 +1,8 @@
 const { getTodaysDate } = require("./getTodaysDate");
 
 function putOrderdataIntoHtml(order_data) {
+  // console.log("In ORDER HTML TEMPLATE", order_data);
+
   const totalItems = order_data.totalItems;
   const totalPrice = order_data.totalPrice;
   const subTotal = order_data.subTotal;

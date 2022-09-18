@@ -25,32 +25,26 @@ const paymentCaptured = expressAsyncHandler(async (req, res) => {
 
   if (digest === req.headers["x-razorpay-signature"]) {
     console.log("request is legit");
-    // process it
-    // get order_id;
-    // find order_id and update payment status to completed.
+    // get order_id , find order_id and update payment status to completed.
 
     const order_id = req.body.payload.payment.entity.order_id;
     // console.log("order id", order_id);
     const order = await Order.findOne({ order_id });
-    // console.log("ORDER ", order);
     if (order) {
       order.paymentStatus = "completed";
       order.payment_id = req.body.payload.payment.entity.id;
 
-      const updated_order = await order
-        .save()
-        .populate("shipping_address", "-_id")
-        .populate("products.products", "-_id")
-        .populate("user", "-password", "-isAuthenticated", "-auth_id");
+      await order.save();
 
-      console.log("updated order", updated_order);
+      const orderData = await Order.findOne({ order_id })
+        .populate("products.products")
+        .populate("shipping_address")
+        .populate("user", "-auth_id");
 
+      // console.log("Order DATA", orderData);
+      
       ///make send email call here
-      sendEmailforOrder(
-        updated_order.user.name,
-        updated_order.email,
-        updated_order
-      );
+      sendEmailforOrder(orderData.user.name, orderData.email, orderData);
 
       res.json({ status: "ok" });
     } else {
