@@ -4,6 +4,7 @@ function getOrderProducts(products) {
   for (let i = 0; i < products.length; i++) {
     const temp = {
       qty: products[i].qty,
+      selectedSize: products[i].selectedSize,
       products: products[i]._id,
     };
 

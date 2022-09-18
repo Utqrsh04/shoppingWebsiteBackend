@@ -25,6 +25,9 @@ const orderSchema = mongoose.Schema(
           type: Number,
           default: 0,
         },
+        selectedSize: {
+          type: String,
+        },
         products: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,
