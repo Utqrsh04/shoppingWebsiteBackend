@@ -72,11 +72,11 @@ const createOrder = asyncHandler(async (req, res) => {
     console.log("razorpay order ", response);
 
     //save shipping address and get its _id
-    console.log("Frontend ", shippingData);
+    // console.log("Frontend ", shippingData);
     const user = shippingData.user;
 
     let savedShippingAddress = await ShippingAddress.findOne({ user });
-    console.log("DB ", savedShippingAddress);
+    // console.log("DB ", savedShippingAddress);
 
     let updatedAddress;
 
@@ -88,13 +88,12 @@ const createOrder = asyncHandler(async (req, res) => {
       savedShippingAddress.state = shippingData.state;
       savedShippingAddress.postal_code = shippingData.postal_code;
       savedShippingAddress.phone_number = shippingData.phone_number;
-
       updatedAddress = await savedShippingAddress.save();
     } else {
       updatedAddress = await ShippingAddress.create(shippingData);
     }
 
-    console.log("Updated ", updatedAddress);
+    // console.log("Updated ", updatedAddress);
 
     //create new order with following details
     const newOrder = {
