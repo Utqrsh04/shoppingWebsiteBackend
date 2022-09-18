@@ -1,6 +1,7 @@
 const expressAsyncHandler = require("express-async-handler");
 const crypto = require("crypto");
 const Order = require("../models/orderModel");
+const { sendEmailforOrder } = require("../utils/sendOrderConfirmationEmail");
 
 const paymentCaptured = expressAsyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -36,15 +37,20 @@ const paymentCaptured = expressAsyncHandler(async (req, res) => {
       order.paymentStatus = "completed";
       order.payment_id = req.body.payload.payment.entity.id;
 
-      const updated_order = await order.save();
+      const updated_order = await order
+        .save()
+        .populate("shipping_address", "-_id")
+        .populate("products.products", "-_id")
+        .populate("user", "-password", "-isAuthenticated", "-auth_id");
+
       console.log("updated order", updated_order);
 
-      // require("fs").writeFileSync(
-      //   "payment1.json",
-      //   JSON.stringify(req.body, null, 4)
-      // );
-
       ///make send email call here
+      sendEmailforOrder(
+        updated_order.user.name,
+        updated_order.email,
+        updated_order
+      );
 
       res.json({ status: "ok" });
     } else {

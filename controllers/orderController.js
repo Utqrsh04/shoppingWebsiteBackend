@@ -15,14 +15,22 @@ const razorpay = new Razorpay({
 });
 
 const createOrder = asyncHandler(async (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "PUT, POST, GET, DELETE, PATCH, OPTIONS"
+  );
+  console.log("In Create Order ");
   const { products, price, email, shippingData } = req.body;
 
-  console.log("In Create Order ");
   const Allproducts = await Product.find();
 
   let subtotal = 0;
   let totalItems = 0;
+
   //subtotal calculation and check
   for (let i = 0; i < products.length; i++) {
     for (let j = 0; j < Allproducts.length; j++) {
@@ -87,8 +95,8 @@ const createOrder = asyncHandler(async (req, res) => {
     }
 
     console.log("Updated ", updatedAddress);
-    //create new order with following details
 
+    //create new order with following details
     const newOrder = {
       order_id: response.id,
       email: email,
@@ -126,7 +134,11 @@ const createOrder = asyncHandler(async (req, res) => {
 });
 
 const getOrdersOfUser = asyncHandler(async (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
 
   console.log("Get Orders of User Called");
   const orders = await Order.find({ user: req.user._id }).populate("products");
@@ -134,7 +146,11 @@ const getOrdersOfUser = asyncHandler(async (req, res) => {
 });
 
 const getOrderById = asyncHandler(async (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  res.setHeader("Access-Control-Allow-Headers", "content-type");
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
 
   console.log("Get Order By ID Called");
   const oid = req.params.id;
