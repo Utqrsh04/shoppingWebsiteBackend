@@ -128,7 +128,7 @@ const createOrder = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    throw new Error(error.error);
+    throw new Error(error);
   }
 });
 
