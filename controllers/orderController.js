@@ -5,13 +5,13 @@ const Razorpay = require("razorpay");
 const Product = require("../models/productModel");
 const ShippingAddress = require("../models/shippingAddressModel");
 const { getOrderProducts } = require("../utils/createOrderProductsObject");
+const { sendEmailforOrder } = require("../utils/sendOrderConfirmationEmail");
 
 const razorpay = new Razorpay({
   // key_id: process.env.RAZOR_KEY,
   // key_secret: process.env.SECRET,
-
-  key_id: "rzp_test_qGx6ZOHwjb87fm",
-  key_secret: "TGtc2CERGLrGO9wNilbufFaO",
+  key_id: "rzp_live_ZezO3QjV4eUAf3",
+  key_secret: "ZLeYjIDYrSTzAPYqCfAApcgp",
 });
 
 const createOrder = asyncHandler(async (req, res) => {
@@ -156,7 +156,10 @@ const getOrderById = asyncHandler(async (req, res) => {
   console.log(oid);
   const order = await Order.findOne({ order_id: oid })
     .populate("shipping_address", "-_id")
-    .populate("products.products", "-_id");
+    .populate("products.products", "-_id")
+    .populate("user", "-auth_id");
+
+  sendEmailforOrder(order.user.name, order.email, order);
 
   // // check if the requested order is created by this user only . (No other user fetch order of other users)
   // if (order.user.toString() !== req.user._id.toString()) {
