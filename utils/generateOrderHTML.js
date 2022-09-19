@@ -1135,20 +1135,25 @@ function generateProductCard(products) {
 
   for (let i = 0; i < products.length; i++) {
     productshtml =
-      productshtml + putDataintoHtml(products[i].products, products[i].qty);
+      productshtml +
+      putDataintoHtml(
+        products[i].products,
+        products[i].selectedSize,
+        products[i].qty
+      );
   }
 
   return productshtml;
 }
 
-function putDataintoHtml(product, qty) {
+function putDataintoHtml(product, selectedSize, qty) {
   const productHtml = `<tr> <td class="esd-structure es-p20t es-p20r es-p20l esdev-adapt-off" align="left" esd-custom-block-id="731032" esdev-config="h1"> <table width="560" cellpadding="0" cellspacing="0" class="esdev-mso-table"> <tbody> <tr> <td class="esdev-mso-td" valign="top"> <table cellpadding="0" cellspacing="0" class="es-left" align="left"> <tbody> <tr> <td width="125" class="esd-container-frame" align="left"> <table cellpadding="0" cellspacing="0" width="100%"> <tbody> <tr> <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank" href=${`https://shoppers123.netlify.app/products/${product.product_id}`}><img class="adapt-img p_image" src=${
     product.cover_image
   } alt="product_image" style="display: block;" width="125" title=${
     product.product_id
   }></a></td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> <td width="20"></td> <td class="esdev-mso-td" valign="top"> <table cellpadding="0" cellspacing="0" class="es-left" align="left"> <tbody> <tr> <td width="125" align="left" class="esd-container-frame"> <table cellpadding="0" cellspacing="0" width="100%"> <tbody> <tr> <td align="left" class="esd-block-text es-p20t es-p20b es-m-p0t es-m-p0b es-m-txt-l"> <h3><strong class="p_name">${
     product.product_name
-  }</strong></h3> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> <td width="20"></td> <td class="esdev-mso-td" valign="top"> <table cellpadding="0" cellspacing="0" class="es-left" align="left"> <tbody> <tr> <td width="176" align="left" class="esd-container-frame"> <table cellpadding="0" cellspacing="0" width="100%"> <tbody> <tr> <td align="right" class="esd-block-text es-p20t es-p20b es-m-p0t es-m-p0b"> <p style="color: #666666;" class="p_description">x${qty}</p> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> <td width="20"></td> <td class="esdev-mso-td" valign="top"> <table cellpadding="0" cellspacing="0" class="es-right" align="right"> <tbody> <tr> <td width="74" align="left" class="esd-container-frame"> <table cellpadding="0" cellspacing="0" width="100%"> <tbody> <tr> <td align="right" class="esd-block-text es-p20t es-p20b es-m-p0t es-m-p0b"> <p class="p_price">${
+  } (${selectedSize})</strong></h3> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> <td width="20"></td> <td class="esdev-mso-td" valign="top"> <table cellpadding="0" cellspacing="0" class="es-left" align="left"> <tbody> <tr> <td width="176" align="left" class="esd-container-frame"> <table cellpadding="0" cellspacing="0" width="100%"> <tbody> <tr> <td align="right" class="esd-block-text es-p20t es-p20b es-m-p0t es-m-p0b"> <p style="color: #666666;" class="p_description">x${qty}</p> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> <td width="20"></td> <td class="esdev-mso-td" valign="top"> <table cellpadding="0" cellspacing="0" class="es-right" align="right"> <tbody> <tr> <td width="74" align="left" class="esd-container-frame"> <table cellpadding="0" cellspacing="0" width="100%"> <tbody> <tr> <td align="right" class="esd-block-text es-p20t es-p20b es-m-p0t es-m-p0b"> <p class="p_price">${
     product.price
   }</p> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </td> </tr>`;
 
