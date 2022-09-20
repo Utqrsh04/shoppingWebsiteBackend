@@ -162,8 +162,6 @@ const getOrderById = asyncHandler(async (req, res) => {
     .populate("products.products", "-_id")
     .populate("user", "-auth_id");
 
-  sendEmailforOrder(order.user.name, order.email, order);
-
   // // check if the requested order is created by this user only . (No other user fetch order of other users)
   // if (order.user.toString() !== req.user._id.toString()) {
   //   res.status(401);
