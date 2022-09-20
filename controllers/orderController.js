@@ -10,8 +10,8 @@ const { sendEmailforOrder } = require("../utils/sendOrderConfirmationEmail");
 const razorpay = new Razorpay({
   // key_id: process.env.RAZOR_KEY,
   // key_secret: process.env.SECRET,
-  key_id: "rzp_live_ZezO3QjV4eUAf3",
-  key_secret: "ZLeYjIDYrSTzAPYqCfAApcgp",
+  key_id: "rzp_test_qGx6ZOHwjb87fm",
+  key_secret: "TGtc2CERGLrGO9wNilbufFaO",
 });
 
 const createOrder = asyncHandler(async (req, res) => {
@@ -19,10 +19,7 @@ const createOrder = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Max-Age", "1800");
   res.setHeader("Access-Control-Allow-Headers", "content-type");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "PUT, POST, GET, DELETE, PATCH, OPTIONS"
-  );
+  res.setHeader("Access-Control-Allow-Methods", "PUT, POST, PATCH, OPTIONS");
   console.log("In Create Order ");
   const { products, price, email, shippingData } = req.body;
 
@@ -69,7 +66,7 @@ const createOrder = asyncHandler(async (req, res) => {
 
   try {
     const response = await razorpay.orders.create(options);
-    console.log("razorpay order ", response);
+    // console.log("razorpay order ", response);
 
     //save shipping address and get its _id
     // console.log("Frontend ", shippingData);
@@ -110,7 +107,7 @@ const createOrder = asyncHandler(async (req, res) => {
     };
 
     const createdOrder = await Order.create(newOrder);
-    console.log("created order ", createdOrder);
+    // console.log("created order ", createdOrder);
 
     createdOrder.user.auth_id = undefined;
     createdOrder.user.isAuthenticated = undefined;
@@ -140,7 +137,14 @@ const getOrdersOfUser = asyncHandler(async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
 
   console.log("Get Orders of User Called");
-  const orders = await Order.find({ user: req.user._id }).populate("products");
+
+  // {$or:[{region: "NA"},{sector:"Some Sector"}]}
+
+  const orders = await Order.find({
+    $and: [{ user: req.user._id }, { paymentStatus: "completed" }],
+  }).populate("products.products", "-_id");
+
+  console.log(orders);
   res.json(orders);
 });
 
@@ -153,7 +157,6 @@ const getOrderById = asyncHandler(async (req, res) => {
 
   console.log("Get Order By ID Called");
   const oid = req.params.id;
-  console.log(oid);
   const order = await Order.findOne({ order_id: oid })
     .populate("shipping_address", "-_id")
     .populate("products.products", "-_id")
