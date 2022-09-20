@@ -60,9 +60,10 @@ const orderSchema = mongoose.Schema(
       type: String,
       default: "pending",
     },
-    isDelivered: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      // pending , cancelled , processed ,delivered
+      default: "pending",
     },
     totalItems: {
       type: Number,
